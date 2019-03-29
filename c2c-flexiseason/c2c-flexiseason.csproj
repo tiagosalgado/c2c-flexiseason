@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
+    <RootNamespace>c2c_flexiseason</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>    
-    <PackageReference Include="HtmlAgilityPack" Version="1.6.10" />    
+  <ItemGroup>       
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
