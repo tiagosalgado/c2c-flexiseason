@@ -52,6 +52,6 @@ namespace c2c_flexiseason
 
         bool IsLocal => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID"));
         string GetVariableValue(string name)
-            => IsLocal ? ConfigurationManager.AppSettings[name] : Environment.GetEnvironmentVariable(name);
+            => Environment.GetEnvironmentVariable(name);
     }
 }

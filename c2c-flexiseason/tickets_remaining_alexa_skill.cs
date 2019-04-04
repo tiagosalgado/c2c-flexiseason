@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
-using System.Net;
-using System.Net.Http;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace c2c_flexiseason
@@ -10,14 +10,14 @@ namespace c2c_flexiseason
     public static class tickets_remaining_alexa_skill
     {
         [FunctionName("tickets_remaining_alexa_skill")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, ILogger log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function processed a request.");
 
             var service = new TicketsService();
             var ticketsRemaining = await service.GetTicketsRemaining();
 
-            return req.CreateResponse(HttpStatusCode.OK, new
+            return new OkObjectResult(new
             {
                 version = "1.0",
                 sessionAttributes = new { },
