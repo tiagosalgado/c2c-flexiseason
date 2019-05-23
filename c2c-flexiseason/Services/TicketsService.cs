@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,19 @@ namespace c2c_flexiseason.Services
 {
     public class TicketsService : ITicketsService
     {
+        private readonly ApiSettings _settings;
+        public TicketsService(IOptions<ApiSettings> settings)
+        {
+            _settings = settings.Value;
+        }
         public async Task<int> GetTicketsRemaining()
         {
-            var baseAddress = new Uri("https://tickets.c2c-online.co.uk/");
+            var baseAddress = new Uri(_settings.BaseUrl);
             var cookieContainer = new CookieContainer();
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer, AllowAutoRedirect = true, UseCookies = true })
             using (var client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
-                var json = new Credentials { Username = GetVariableValue("c2c_email"), Password = GetVariableValue("c2c_pwd") };
+                var json = new Credentials { Username = _settings.Username, Password = _settings.Password };
                 var requestContent = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
 
                 var authResult = await client.PostAsync("pico/v1/auth", requestContent);
