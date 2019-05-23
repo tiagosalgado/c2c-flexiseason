@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace c2c_flexiseason
+namespace c2c_flexiseason.Services
 {
-    public class TicketsService
+    public class TicketsService : ITicketsService
     {
         public async Task<int> GetTicketsRemaining()
         {

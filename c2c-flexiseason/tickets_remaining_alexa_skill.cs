@@ -1,3 +1,4 @@
+using c2c_flexiseason.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -7,15 +8,19 @@ using System.Threading.Tasks;
 
 namespace c2c_flexiseason
 {
-    public static class tickets_remaining_alexa_skill
+    public class tickets_remaining_alexa_skill
     {
+        private readonly ITicketsService _ticketsService;
+        public tickets_remaining_alexa_skill(ITicketsService ticketsService)
+        {
+            _ticketsService = ticketsService;
+        }
         [FunctionName("tickets_remaining_alexa_skill")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, ILogger log)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var service = new TicketsService();
-            var ticketsRemaining = await service.GetTicketsRemaining();
+            var ticketsRemaining = await _ticketsService.GetTicketsRemaining();
 
             return new OkObjectResult(new
             {
