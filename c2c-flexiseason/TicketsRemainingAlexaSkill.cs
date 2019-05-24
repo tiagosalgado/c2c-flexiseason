@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace c2c_flexiseason
 {
-    public class tickets_remaining_alexa_skill
+    public class TicketsRemainingAlexaSkill
     {
         private readonly ITicketsService _ticketsService;
-        public tickets_remaining_alexa_skill(ITicketsService ticketsService)
+        public TicketsRemainingAlexaSkill(ITicketsService ticketsService)
         {
             _ticketsService = ticketsService;
         }

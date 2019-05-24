@@ -28,11 +28,11 @@ namespace c2c_flexiseason.Services
                 var requestContent = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
 
                 var authResult = await client.PostAsync("pico/v1/auth", requestContent);
-                var response = await authResult.Content.ReadAsStringAsync();
+                await authResult.Content.ReadAsStringAsync();
 
                 var loginPageResult = await client.GetAsync("/pico/v1/user");
                 loginPageResult.EnsureSuccessStatusCode();
-                var loginResponse = await loginPageResult.Content.ReadAsStringAsync();
+                await loginPageResult.Content.ReadAsStringAsync();
 
                 var smartCardsResponse = await client.GetAsync("/pico/v1/card/smartcards");
                 var smartCardsContent = await smartCardsResponse.Content.ReadAsStringAsync();
@@ -54,9 +54,5 @@ namespace c2c_flexiseason.Services
                 return 0;
             }
         }
-
-        bool IsLocal => string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID"));
-        string GetVariableValue(string name)
-            => Environment.GetEnvironmentVariable(name);
     }
 }
