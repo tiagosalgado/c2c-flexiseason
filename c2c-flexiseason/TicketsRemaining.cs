@@ -21,7 +21,7 @@ namespace c2c_flexiseason
             log.LogInformation("C# HTTP trigger function processed a request.");
             var ticketsRemaining = await _ticketsService.GetTicketsRemaining();
 
-            return new JsonResult(ticketsRemaining.ToString());
+            return new JsonResult(new { ticketsNo = ticketsRemaining });
         }
 
         
