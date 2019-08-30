@@ -17,14 +17,23 @@ namespace c2c_flexiseason
             configurationBuilder.AddAzureAppConfiguration(Environment.GetEnvironmentVariable("AppConfigurationConnectionString"));
             var config = configurationBuilder.Build();
 
-            var apiSettings = new ApiSettings
+            builder.Services.AddOptions();
+
+            var _settings = new Settings
             {
-                BaseUrl = config["BaseUrl"],
-                Username = config["c2c_email"],
-                Password = config["c2c_pwd"]
+                ApiSettings = new ApiSettings
+                {
+                    BaseUrl = config["BaseUrl"],
+                    Username = config["c2c_email"],
+                    Password = config["c2c_pwd"]
+                },
+                SmartcardInfo = new SmartcardInfo
+                {
+                    SerialNumber = config["SmartcardSerialNumber"]
+                }
             };
 
-            builder.Services.AddTransient<ITicketsService>(_ => new TicketsService(Options.Create(apiSettings)));
+            builder.Services.AddTransient<ITicketsService>(_ => new TicketsService(Options.Create(_settings)));
         }
     }
 }

@@ -12,19 +12,23 @@ namespace c2c_flexiseason.Services
 {
     public class TicketsService : ITicketsService
     {
-        private readonly ApiSettings _settings;
-        public TicketsService(IOptions<ApiSettings> settings)
+        private readonly ApiSettings _apiSettings;
+        private readonly Settings _settings;
+        private readonly SmartcardInfo _smartcardInfo;
+        public TicketsService(IOptions<Settings> settings)
         {
             _settings = settings.Value;
+            _apiSettings = _settings.ApiSettings;
+            _smartcardInfo = _settings.SmartcardInfo;
         }
         public async Task<int> GetTicketsRemaining()
         {
-            var baseAddress = new Uri(_settings.BaseUrl);
+            var baseAddress = new Uri(_apiSettings.BaseUrl);
             var cookieContainer = new CookieContainer();
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer, AllowAutoRedirect = true, UseCookies = true })
             using (var client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
-                var json = new Credentials { Username = _settings.Username, Password = _settings.Password };
+                var json = new Credentials { Username = _apiSettings.Username, Password = _apiSettings.Password };
                 var requestContent = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
 
                 var authResult = await client.PostAsync("pico/v1/auth", requestContent);
@@ -38,8 +42,8 @@ namespace c2c_flexiseason.Services
                 var smartCardsContent = await smartCardsResponse.Content.ReadAsStringAsync();
 
                 var smartCards = JsonConvert.DeserializeObject<IEnumerable<Smartcard>>(smartCardsContent);
-                var activeSmartCard = smartCards.FirstOrDefault();
-                var productsResponse = await client.GetAsync($"/pico/v1/card/{activeSmartCard.SerialNumber}/products");
+               
+                var productsResponse = await client.GetAsync($"/pico/v1/card/{_smartcardInfo.SerialNumber}/products");
                 productsResponse.EnsureSuccessStatusCode();
 
                 var productsContent = await productsResponse.Content.ReadAsStringAsync();
