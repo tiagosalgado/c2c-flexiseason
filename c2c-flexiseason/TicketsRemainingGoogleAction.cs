@@ -37,7 +37,7 @@ namespace c2c_flexiseason
                                     new {
                                         simpleResponse = new
                                         {
-                                            textToSpeach = $"You have {ticketsRemaining} tickets left."
+                                            textToSpeech = $"You have {ticketsRemaining} tickets left."
                                         }
                                 }
                                 }
