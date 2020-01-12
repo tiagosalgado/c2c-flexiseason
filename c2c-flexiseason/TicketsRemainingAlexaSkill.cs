@@ -15,8 +15,9 @@ namespace c2c_flexiseason
         {
             _ticketsService = ticketsService;
         }
-        [FunctionName("tickets_remaining_alexa_skill")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, ILogger log)
+
+        [FunctionName("AlexaSkill")]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "alexa/tickets")]HttpRequest req, ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
