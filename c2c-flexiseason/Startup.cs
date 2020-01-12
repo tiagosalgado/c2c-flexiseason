@@ -4,7 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Serilog.Events;
+using Serilog;
 using System;
+using Sentry;
 
 [assembly: FunctionsStartup(typeof(c2c_flexiseason.Startup))]
 namespace c2c_flexiseason
@@ -16,6 +19,23 @@ namespace c2c_flexiseason
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddAzureAppConfiguration(Environment.GetEnvironmentVariable("AppConfigurationConnectionString"));
             var config = configurationBuilder.Build();
+
+            builder.Services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSerilog(
+                    new LoggerConfiguration()
+                        .Enrich.FromLogContext()
+                        .WriteTo.Sentry(o =>
+                        {
+                            o.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                            o.MinimumEventLevel = LogEventLevel.Information;
+                            o.Dsn = new Dsn(config["SentryConfigUrl"]);
+                            o.AttachStacktrace = true;
+                            o.SendDefaultPii = true;
+                        })
+                        .CreateLogger()
+                    );
+            });
 
             builder.Services.AddOptions();
 
