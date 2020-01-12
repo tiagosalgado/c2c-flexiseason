@@ -28,7 +28,7 @@ namespace c2c_flexiseason
                         .WriteTo.Sentry(o =>
                         {
                             o.MinimumBreadcrumbLevel = LogEventLevel.Debug;
-                            o.MinimumEventLevel = LogEventLevel.Information;
+                            o.MinimumEventLevel = LogEventLevel.Error;
                             o.Dsn = new Dsn(config["SentryConfigUrl"]);
                             o.AttachStacktrace = true;
                             o.SendDefaultPii = true;
